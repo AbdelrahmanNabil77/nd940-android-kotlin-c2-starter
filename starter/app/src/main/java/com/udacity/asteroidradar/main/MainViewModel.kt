@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.datalayer.repository.AsteroidRepository
 import com.udacity.asteroidradar.model.Asteroid
+import com.udacity.asteroidradar.model.ImageOfTheDay
 import com.udacity.asteroidradar.utils.AppUtils
 import com.udacity.asteroidradar.utils.Resource
 import kotlinx.coroutines.launch
@@ -21,13 +22,46 @@ class MainViewModel(
     val repository: AsteroidRepository,
     val app: Application
 ) : AndroidViewModel(app) {
-    val _asteroids = MutableLiveData<Resource<List<Asteroid>>>()
+    private val _asteroids = MutableLiveData<Resource<List<Asteroid>>>()
     val asteroids: LiveData<Resource<List<Asteroid>>>
         get() = _asteroids
-
+    val _imageOTD = MutableLiveData<Resource<ImageOfTheDay>>()
 
     fun getAsteroids() = viewModelScope.launch {
         safeGetAsteroids()
+    }
+
+    fun getImageOTD() = viewModelScope.launch {
+        safeGetImageOTD()
+    }
+
+    private fun safeGetImageOTD() {
+        _imageOTD.postValue(Resource.Loading())
+        try {
+            if (AppUtils.hasInternetConnection(app)) {
+                repository.getImageOfTheDay().enqueue(object : Callback<List<ImageOfTheDay>> {
+                    override fun onFailure(call: Call<List<ImageOfTheDay>>, t: Throwable) {
+                        _imageOTD.postValue(Resource.Error("${t.message}"))
+                    }
+
+                    override fun onResponse(
+                        call: Call<List<ImageOfTheDay>>,
+                        response: Response<List<ImageOfTheDay>>
+                    ) {
+                        response.body()?.let {
+                            _imageOTD.postValue(Resource.Success(it.get(0)))
+                        }
+                    }
+                })
+            } else {
+                _imageOTD.postValue(Resource.Error("No internet connection"))
+            }
+        } catch (t: Throwable) {
+            when (t) {
+                is IOException -> _imageOTD.postValue(Resource.Error("Network Failure"))
+                else -> _imageOTD.postValue(Resource.Error("Conversion Error"))
+            }
+        }
     }
 
     private fun safeGetAsteroids() {
@@ -60,5 +94,5 @@ class MainViewModel(
         val jsonObject = JSONObject(response)
         return parseAsteroidsJsonResult(jsonObject)
     }
-    
+
 }

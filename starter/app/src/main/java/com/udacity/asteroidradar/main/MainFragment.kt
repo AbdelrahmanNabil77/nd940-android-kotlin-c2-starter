@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
@@ -26,27 +27,21 @@ class MainFragment : Fragment() {
         val application = requireActivity().application as Application
         val viewModelProviderFactory = ViewModelFactory(asteroidRepository = asteroidRepository, application = application)
         viewModel=ViewModelProvider(this, viewModelProviderFactory).get(MainViewModel::class.java)
-        viewModel.asteroids.observe(viewLifecycleOwner,{
-            when(it){
-                is Resource.Success ->{
-                    Log.d("nasa_tag","data: ${it.data}")
+        viewModel.asteroids.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("nasa_tag", "data: ${it.data}")
                 }
-                is Resource.Error ->{
-                    Log.d("nasa_tag","error: ${it.message}")
+                is Resource.Error -> {
+                    Log.d("nasa_tag", "error: ${it.message}")
                 }
             }
-        })
+        }
+
         viewModel.getAsteroids()
+        viewModel.getImageOTD()
         binding.viewModel = viewModel
-
-        setHasOptionsMenu(true)
-
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
