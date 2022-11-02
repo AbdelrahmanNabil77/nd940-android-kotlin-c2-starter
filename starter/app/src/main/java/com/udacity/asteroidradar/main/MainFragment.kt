@@ -4,6 +4,7 @@ import android.app.Application
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -32,7 +33,7 @@ class MainFragment : Fragment() {
         viewModel.asteroids.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Success -> {
-                    Log.d("nasa_tag", "data: ${it.data}")
+                    binding.statusLoadingWheel.visibility=View.GONE
                     it.data?.let {
                         binding.asteroidRecycler.adapter=MainRecyclerViewAdapter(it,
                             MainRecyclerViewAdapter.AsteroidListener {
@@ -43,7 +44,11 @@ class MainFragment : Fragment() {
 
                 }
                 is Resource.Error -> {
-                    Log.d("nasa_tag", "error: ${it.message}")
+                    binding.statusLoadingWheel.visibility=View.GONE
+                    Toast.makeText(requireContext(),"${it.message}",Toast.LENGTH_LONG).show()
+                }
+                is Resource.Loading ->{
+                    binding.statusLoadingWheel.visibility=View.VISIBLE
                 }
             }
         }
