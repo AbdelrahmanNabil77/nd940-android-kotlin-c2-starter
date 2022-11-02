@@ -5,6 +5,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="@{()->asteroidClick.onClick(asteroid)}"
         android:padding="10dp">
 
         <ImageView
@@ -39,5 +40,9 @@
         <variable
             name="asteroid"
             type="com.udacity.asteroidradar.model.Asteroid" />
+
+        <variable
+            name="asteroidClick"
+            type="com.udacity.asteroidradar.adapters.MainRecyclerViewAdapter.AsteroidListener" />
     </data>
 </layout>

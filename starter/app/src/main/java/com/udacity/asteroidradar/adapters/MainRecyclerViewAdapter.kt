@@ -7,7 +7,8 @@ import com.udacity.asteroidradar.databinding.ItemAsteroidBinding
 import com.udacity.asteroidradar.model.Asteroid
 
 class MainRecyclerViewAdapter(
-    val asteroids:List<Asteroid>
+    val asteroids: List<Asteroid>,
+    val clickListener: AsteroidListener
 ) :
     RecyclerView.Adapter<MainRecyclerViewAdapter.ItemAsteroidViewHolder>() {
     class ItemAsteroidViewHolder(val binding: ItemAsteroidBinding) :
@@ -24,10 +25,15 @@ class MainRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ItemAsteroidViewHolder, position: Int) {
-        holder.binding.asteroid=asteroids.get(position)
+        holder.binding.asteroid = asteroids.get(position)
+        holder.binding.asteroidClick=clickListener
     }
 
     override fun getItemCount(): Int {
         return asteroids.size
+    }
+
+    class AsteroidListener(val clickListener: (asteroid: Asteroid) -> Unit) {
+        fun onClick(asteroid: Asteroid) = clickListener(asteroid)
     }
 }

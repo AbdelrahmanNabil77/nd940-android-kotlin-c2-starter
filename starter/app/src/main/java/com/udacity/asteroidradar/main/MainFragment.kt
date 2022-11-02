@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.adapters.MainRecyclerViewAdapter
@@ -33,7 +34,11 @@ class MainFragment : Fragment() {
                 is Resource.Success -> {
                     Log.d("nasa_tag", "data: ${it.data}")
                     it.data?.let {
-                        binding.asteroidRecycler.adapter=MainRecyclerViewAdapter(it)
+                        binding.asteroidRecycler.adapter=MainRecyclerViewAdapter(it,
+                            MainRecyclerViewAdapter.AsteroidListener {
+                                val action=MainFragmentDirections.actionShowDetail(it)
+                                findNavController().navigate(action)
+                        })
                     }
 
                 }
