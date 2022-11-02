@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.R
+import com.udacity.asteroidradar.adapters.MainRecyclerViewAdapter
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 import com.udacity.asteroidradar.datalayer.repository.AsteroidRepository
@@ -31,6 +32,10 @@ class MainFragment : Fragment() {
             when (it) {
                 is Resource.Success -> {
                     Log.d("nasa_tag", "data: ${it.data}")
+                    it.data?.let {
+                        binding.asteroidRecycler.adapter=MainRecyclerViewAdapter(it)
+                    }
+
                 }
                 is Resource.Error -> {
                     Log.d("nasa_tag", "error: ${it.message}")

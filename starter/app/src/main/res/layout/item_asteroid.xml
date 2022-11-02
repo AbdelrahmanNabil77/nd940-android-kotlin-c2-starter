@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/close_approach_date"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/code_name"
+            app:statusIcon="@{asteroid.isPotentiallyHazardous}" />
+
+        <TextView
+            android:id="@+id/close_approach_date"
+            style="@style/style_recyclerview_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{asteroid.closeApproachDate}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/code_name" />
+
+        <TextView
+            android:id="@+id/code_name"
+            style="@style/style_recyclerview_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{asteroid.codename}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <data>
+
+        <variable
+            name="asteroid"
+            type="com.udacity.asteroidradar.model.Asteroid" />
+    </data>
+</layout>

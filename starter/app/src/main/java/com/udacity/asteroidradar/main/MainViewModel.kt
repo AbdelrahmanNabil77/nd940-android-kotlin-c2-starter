@@ -48,8 +48,14 @@ class MainViewModel(
                         call: Call<List<ImageOfTheDay>>,
                         response: Response<List<ImageOfTheDay>>
                     ) {
-                        response.body()?.let {
-                            _imageOTD.postValue(Resource.Success(it.get(0)))
+                        response.body()?.let { imageObject ->
+                            if (imageObject.size > 0) {
+                                imageObject.get(0).mediaType?.let {
+                                    if (it == "image") {
+                                        _imageOTD.postValue(Resource.Success(imageObject.get(0)))
+                                    }
+                                }
+                            }
                         }
                     }
                 })
