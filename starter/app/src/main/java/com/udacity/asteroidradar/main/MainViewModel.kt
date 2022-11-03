@@ -1,6 +1,7 @@
 package com.udacity.asteroidradar.main
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -74,31 +75,47 @@ class MainViewModel(
         _asteroids.postValue(Resource.Loading())
         try {
             if (AppUtils.hasInternetConnection(app)) {
-                repository.getAsteroids().enqueue(object : Callback<String> {
+                repository.getAsteroidsFromRetrofit().enqueue(object : Callback<String> {
                     override fun onFailure(call: Call<String>, t: Throwable) {
                         _asteroids.postValue(Resource.Error("${t.message}"))
+                        emitDataFromDB()
                     }
 
                     override fun onResponse(call: Call<String>, response: Response<String>) {
                         response.body()?.let {
-                            _asteroids.postValue(Resource.Success(getAsteroidsList(it)))
+                            viewModelScope.launch {
+                                repository.clearAsteroids()
+                                repository.insertAsteroids(getAsteroidsList(it))
+                                emitDataFromDB()
+                            }
                         }
                     }
                 })
             } else {
                 _asteroids.postValue(Resource.Error("No internet connection"))
+                emitDataFromDB()
+
             }
         } catch (t: Throwable) {
             when (t) {
                 is IOException -> _asteroids.postValue(Resource.Error("Network Failure"))
                 else -> _asteroids.postValue(Resource.Error("Conversion Error"))
             }
+            emitDataFromDB()
         }
     }
 
     private fun getAsteroidsList(response: String): List<Asteroid> {
         val jsonObject = JSONObject(response)
         return parseAsteroidsJsonResult(jsonObject)
+    }
+
+    private fun emitDataFromDB(){
+        viewModelScope.launch {
+            repository.getAsteroidsFromDB().let {
+                _asteroids.postValue(Resource.Success(it))
+            }
+        }
     }
 
 }

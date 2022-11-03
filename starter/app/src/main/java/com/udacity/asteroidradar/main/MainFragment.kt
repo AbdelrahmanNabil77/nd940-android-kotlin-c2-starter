@@ -13,6 +13,7 @@ import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.adapters.MainRecyclerViewAdapter
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
+import com.udacity.asteroidradar.datalayer.local.AsteroidsDatabase
 import com.udacity.asteroidradar.datalayer.repository.AsteroidRepository
 import com.udacity.asteroidradar.utils.DateUtils.getTodayDate
 import com.udacity.asteroidradar.utils.Resource
@@ -26,10 +27,18 @@ class MainFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         val binding = FragmentMainBinding.inflate(inflater)
         binding.lifecycleOwner = this
-        val asteroidRepository=AsteroidRepository()
+        val asteroidsDao=AsteroidsDatabase.getInstance(requireContext()).asteroidsDao
+        val asteroidRepository=AsteroidRepository(asteroidsDao)
         val application = requireActivity().application as Application
         val viewModelProviderFactory = ViewModelFactory(asteroidRepository = asteroidRepository, application = application)
         viewModel=ViewModelProvider(this, viewModelProviderFactory).get(MainViewModel::class.java)
+//        viewModel.asteroidsListFromDB.observe(viewLifecycleOwner){
+//            binding.asteroidRecycler.adapter=MainRecyclerViewAdapter(it,
+//                MainRecyclerViewAdapter.AsteroidListener {
+//                    val action=MainFragmentDirections.actionShowDetail(it)
+//                    findNavController().navigate(action)
+//                })
+//        }
         viewModel.asteroids.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Success -> {

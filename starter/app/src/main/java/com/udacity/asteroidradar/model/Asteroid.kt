@@ -1,9 +1,11 @@
 package com.udacity.asteroidradar.model
 
 import android.os.Parcelable
+import androidx.room.Entity
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
+@Entity(tableName = "asteroids_table", primaryKeys = ["id"])
 data class Asteroid(
     val id: Long,
     val codename: String,
