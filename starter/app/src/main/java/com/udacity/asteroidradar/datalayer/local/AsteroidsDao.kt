@@ -16,5 +16,5 @@ interface AsteroidsDao {
     suspend fun clearAllAsteroids():Int
 
     @Query("select * from asteroids_table ORDER BY closeApproachDate ASC")
-    suspend fun getAllAsteroids():List<Asteroid>
+    fun getAllAsteroids():LiveData<List<Asteroid>>
 }

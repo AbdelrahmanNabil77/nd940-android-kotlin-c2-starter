@@ -8,10 +8,9 @@ import retrofit2.http.Query
 
 interface RetrofitService {
     @GET("neo/rest/v1/feed")
-    fun getAsteroids(@Query("start_date") start_date: String,
-                     @Query("api_key") api_key: String): Call<String>
+    suspend fun getAsteroids(@Query("start_date") start_date: String,
+                     @Query("api_key") api_key: String): String
 
     @GET("planetary/apod")
-    fun getImageOfTheDay(@Query("api_key") api_key: String,
-        @Query("start_date") start_date: String): Call<List<ImageOfTheDay>>
+    suspend fun getImageOfTheDay(@Query("api_key") api_key: String): ImageOfTheDay
 }
