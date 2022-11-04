@@ -18,22 +18,29 @@ class MainViewModel(
 ) : AndroidViewModel(app) {
     val imageOTD = MutableLiveData<ImageOfTheDay>()
     val asteroidsGeneralList=MutableLiveData<List<Asteroid>>()
+    val isLoading=MutableLiveData<Boolean>()
 
     fun getWeekAsteroids() = viewModelScope.launch {
+        isLoading.postValue(true)
         repository.getWeekAsteroids()
         val asteroidsList=repository.savedAsteroidsList()
         asteroidsGeneralList.postValue(asteroidsList)
+        isLoading.postValue(false)
     }
 
     fun getTodayAsteroids() = viewModelScope.launch {
+        isLoading.postValue(true)
         repository.getTodayAsteroids()
         val asteroidsList=repository.todayAsteroidsList()
         asteroidsGeneralList.postValue(asteroidsList)
+        isLoading.postValue(false)
     }
 
     fun getSavedAsteroids() = viewModelScope.launch {
+        isLoading.postValue(true)
         val asteroidsList=repository.savedAsteroidsList()
         asteroidsGeneralList.postValue(asteroidsList)
+        isLoading.postValue(false)
     }
 
 

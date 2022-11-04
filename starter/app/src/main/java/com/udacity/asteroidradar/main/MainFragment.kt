@@ -2,7 +2,6 @@ package com.udacity.asteroidradar.main
 
 import android.app.Application
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -30,12 +29,17 @@ class MainFragment : Fragment() {
         viewModel=ViewModelProvider(this, viewModelProviderFactory).get(MainViewModel::class.java)
         binding.statusLoadingWheel.show()
         viewModel.asteroidsGeneralList.observe(viewLifecycleOwner){
-            binding.statusLoadingWheel.hide()
             binding.asteroidRecycler.adapter=MainRecyclerViewAdapter(it,
                 MainRecyclerViewAdapter.AsteroidListener {
                     val action=MainFragmentDirections.actionShowDetail(it)
                     findNavController().navigate(action)
                 })
+        }
+        viewModel.isLoading.observe(viewLifecycleOwner){
+            when(it){
+                true->binding.statusLoadingWheel.show()
+                false->binding.statusLoadingWheel.hide()
+            }
         }
         viewModel.getTodayAsteroids()
         viewModel.getImageOfTheDay()
