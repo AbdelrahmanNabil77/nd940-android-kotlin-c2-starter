@@ -1,6 +1,7 @@
 package com.udacity.asteroidradar.datalayer.repository
 
 import android.util.Log
+import com.udacity.asteroidradar.BuildConfig
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.datalayer.local.AsteroidsDao
 import com.udacity.asteroidradar.datalayer.remote.RetrofitInstance
@@ -13,10 +14,10 @@ class AsteroidRepository(val asteroidsDao: AsteroidsDao) {
     //remote
     suspend fun getAsteroidsFromRetrofit(end_date: String? = null) =
         RetrofitInstance.api.getAsteroids(
-            start_date = getTodayDate(), api_key = Constants.API_KEY, end_date = end_date)
+            start_date = getTodayDate(), api_key = BuildConfig.NASA_API_KEY, end_date = end_date)
 
     suspend fun getImageOfTheDay() =
-        RetrofitInstance.api.getImageOfTheDay(api_key = Constants.API_KEY)
+        RetrofitInstance.api.getImageOfTheDay(api_key =BuildConfig.NASA_API_KEY)
 
     //local
     suspend fun savedAsteroidsList() = asteroidsDao.getSavedAsteroids(getTodayDate())
