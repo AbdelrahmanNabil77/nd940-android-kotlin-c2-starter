@@ -1,8 +1,6 @@
 package com.udacity.asteroidradar.datalayer.repository
 
 import android.util.Log
-import android.widget.Toast
-import androidx.lifecycle.LiveData
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.datalayer.local.AsteroidsDao
 import com.udacity.asteroidradar.datalayer.remote.RetrofitInstance

@@ -36,22 +36,5 @@ class AppUtils {
             }
             return false
         }
-
-        fun showDialog(title: String, msg: String, finish: Boolean, activity: Activity, isFragmentAdded:Boolean) {
-            if (isFragmentAdded) {
-                if (!finish) {
-                    val dialog = AlertDialog.Builder(activity).setTitle(title).setMessage(msg)
-                        .setPositiveButton("OK") { dialog, which ->
-                            dialog.dismiss()
-                        }.setCancelable(false).show()
-                } else {
-                    val dialog = AlertDialog.Builder(activity).setTitle(title).setMessage(msg)
-                        .setPositiveButton("OK") { dialog, which ->
-                            dialog.dismiss()
-                            activity.onBackPressed()
-                        }.setCancelable(false).show()
-                }
-            }
-        }
     }
 }
