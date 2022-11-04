@@ -9,8 +9,10 @@ import com.squareup.picasso.Picasso
 fun bindAsteroidStatusImage(imageView: ImageView, isHazardous: Boolean) {
     if (isHazardous) {
         imageView.setImageResource(R.drawable.ic_status_potentially_hazardous)
+        imageView.contentDescription=imageView.context.getString(R.string.potentially_hazardous_asteroid_image)
     } else {
         imageView.setImageResource(R.drawable.ic_status_normal)
+        imageView.contentDescription=imageView.context.getString(R.string.not_hazardous_asteroid_image)
     }
 }
 
@@ -18,8 +20,10 @@ fun bindAsteroidStatusImage(imageView: ImageView, isHazardous: Boolean) {
 fun bindDetailsStatusImage(imageView: ImageView, isHazardous: Boolean) {
     if (isHazardous) {
         imageView.setImageResource(R.drawable.asteroid_hazardous)
+        imageView.contentDescription=imageView.context.getString(R.string.potentially_hazardous_asteroid_image)
     } else {
         imageView.setImageResource(R.drawable.asteroid_safe)
+        imageView.contentDescription=imageView.context.getString(R.string.not_hazardous_asteroid_image)
     }
 }
 
@@ -43,10 +47,13 @@ fun bindTextViewToDisplayVelocity(textView: TextView, number: Double) {
 
 @BindingAdapter("imageUrl")
 fun bindImage(imgView: ImageView, imgUrl: String?) {
-    imgUrl?.let {
+    if(imgUrl!=null) {
         Picasso.with(imgView.context)
             .load(imgUrl)
+            .placeholder(R.drawable.ic_baseline_image_not_supported_24)
             .into(imgView)
+    }else{
+        imgView.setImageResource(R.drawable.ic_baseline_image_not_supported_24)
     }
 }
 
