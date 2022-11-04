@@ -1,6 +1,5 @@
 package com.udacity.asteroidradar.datalayer.local
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -12,9 +11,12 @@ interface AsteroidsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAsteroidsList(asteroidsList: List<Asteroid>)
 
-    @Query("DELETE FROM asteroids_table")
-    suspend fun clearAllAsteroids():Int
+    @Query("DELETE FROM asteroids_table where closeApproachDate<:date")
+    suspend fun clearOldAsteroids(date:String):Int
 
-    @Query("select * from asteroids_table ORDER BY closeApproachDate ASC")
-    fun getAllAsteroids():LiveData<List<Asteroid>>
+    @Query("select * from asteroids_table where closeApproachDate>=:date ORDER BY closeApproachDate ASC")
+    suspend fun getSavedAsteroids(date:String):List<Asteroid>
+
+    @Query("select * from asteroids_table where closeApproachDate=:date ORDER BY closeApproachDate ASC")
+    suspend fun getTodayAsteroids(date:String):List<Asteroid>
 }
